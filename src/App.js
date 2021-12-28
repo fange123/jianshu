@@ -24,13 +24,14 @@ class App extends React.Component {
   }
 
   handleChange(e) {
-    this.setState({ inputValue: e.target.value });
+    this.setState(() => ({ inputValue: e.target.value }));
   }
 
   handleDelete(id) {
     //! state中的数据不能直接修改，必须通过setState
-    let newList = this.state.list.filter((item) => item.id !== id);
-    this.setState({ list: newList });
+    this.setState((prevState) => ({
+      list: prevState.filter((item) => item.id !== id),
+    }));
   }
 
   handleSubmit() {
@@ -59,21 +60,23 @@ class App extends React.Component {
           />
           <button onClick={this.handleSubmit}>提交</button>
         </div>
-        <ul>
-          {this.state.list.map((item) => (
-            <li
-              key={item.id}
-              onClick={this.handleDelete.bind(this, item.id)}
-              // !dangerouslySetInnerHTML让某些标签的内容不被转译
-              dangerouslySetInnerHTML={{ __html: item.name }}
-            >
-              {/* !: 如果使用了dangerouslySetInnerHTML，那么该标签内部不能再写内容，否则会报错*/}
-              {/* {item.name} */}
-            </li>
-          ))}
-        </ul>
+        <ul>{this.getTodoItem()}</ul>
       </>
     );
+  }
+
+  getTodoItem() {
+    return this.state.list.map((item) => (
+      <li
+        key={item.id}
+        onClick={this.handleDelete.bind(this, item.id)}
+        // !dangerouslySetInnerHTML让某些标签的内容不被转译
+        dangerouslySetInnerHTML={{ __html: item.name }}
+      >
+        {/* !: 如果使用了dangerouslySetInnerHTML，那么该标签内部不能再写内容，否则会报错*/}
+        {/* {item.name} */}
+      </li>
+    ));
   }
 }
 
