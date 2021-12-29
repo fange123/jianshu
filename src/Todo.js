@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import List from "./components/List";
 import Search from "./components/Search";
+import Test from "./components/Test";
 class Todo extends Component {
   constructor(props) {
     super(props);
@@ -72,6 +73,7 @@ class Todo extends Component {
     });
   }
 
+  //* 当组件的state或者props发生改变的时候，render函数就会重新渲染
   render() {
     return (
       <>
@@ -81,6 +83,7 @@ class Todo extends Component {
           handleSubmit={this.handleSubmit}
         />
         <List list={this.state.list} handleDelete={this.handleDelete} />
+        <Test inputValue={this.state.inputValue} />
       </>
     );
   }

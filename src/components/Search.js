@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 class Search extends Component {
   render() {
     const { inputValue, handleChange, handleSubmit } = this.props;
@@ -16,4 +17,10 @@ class Search extends Component {
     );
   }
 }
+
+Search.propTypes = {
+  inputValue: PropTypes.string,
+  handleChange: PropTypes.func,
+  handleSubmit: PropTypes.func,
+};
 export default Search;
