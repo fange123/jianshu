@@ -24,13 +24,21 @@ class App extends React.Component {
   }
 
   handleChange(e) {
-    this.setState(() => ({ inputValue: e.target.value }));
+    //~react中可以使用ref获取dom元素,but尽量不要这样，操作dom
+    //~setState相当于异步操作，所以不能直接在后面取值，但是setState提供第二个参数：回调函数，在他里面可以
+    this.setState(
+      () => ({ inputValue: this.input.value }),
+      () => {
+        console.log(this.ul.querySelectorAll("li").length);
+      }
+    );
+    // this.setState(() => ({ inputValue: e.target.value }));
   }
 
   handleDelete(id) {
     //! state中的数据不能直接修改，必须通过setState
     this.setState((prevState) => ({
-      list: prevState.filter((item) => item.id !== id),
+      list: prevState.list.filter((item) => item.id !== id),
     }));
   }
 
@@ -57,10 +65,11 @@ class App extends React.Component {
             type='text'
             value={this.state.inputValue}
             onChange={this.handleChange}
+            ref={(input) => (this.input = input)}
           />
           <button onClick={this.handleSubmit}>提交</button>
         </div>
-        <ul>{this.getTodoItem()}</ul>
+        <ul ref={(ul) => (this.ul = ul)}>{this.getTodoItem()}</ul>
       </>
     );
   }

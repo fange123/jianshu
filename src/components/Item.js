@@ -12,7 +12,16 @@ class Item extends Component {
     handleDelete(id);
   }
 
+  //* 该生命周期函数里面可以避免子组件做无谓的渲染
+  shouldComponentUpdate(nextProps, nextState) {
+    if (this.props.name !== nextProps.name) {
+      return true;
+    }
+    return false;
+  }
+
   render() {
+    console.log("render child");
     const { name } = this.props;
     return <div onClick={this.handleClick}>{name}</div>;
   }

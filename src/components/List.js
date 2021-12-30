@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 class List extends Component {
   render() {
     const { list, handleDelete } = this.props;
+
     return (
       <ul>
         {list?.map((item) => (
