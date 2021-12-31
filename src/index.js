@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import Todo from "./Todo";
+import Todo from "./Transition";
 
 ReactDOM.render(
   <React.StrictMode>
