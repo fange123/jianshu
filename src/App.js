@@ -1,92 +1,71 @@
-import React from "react";
-class App extends React.Component {
+import { Input, Space, Button, List } from "antd";
+import React, { Component } from "react";
+import "./App.css";
+import store from "./store";
+
+class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      inputValue: "",
-      list: [
-        {
-          name: "学习",
-          id: 1,
-        },
-        {
-          name: "玩耍",
-          id: 2,
-        },
-        {
-          name: "打游戏",
-          id: 3,
-        },
-      ],
-    };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
+    this.state = store.getState();
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleStoreChange = this.handleStoreChange.bind(this);
+    this.handleAdd = this.handleAdd.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
 
-  handleChange(e) {
-    //~react中可以使用ref获取dom元素,but尽量不要这样，操作dom
-    //~setState相当于异步操作，所以不能直接在后面取值，但是setState提供第二个参数：回调函数，在他里面可以
-    this.setState(
-      () => ({ inputValue: this.input.value }),
-      () => {
-        console.log(this.ul.querySelectorAll("li").length);
-      }
-    );
-    // this.setState(() => ({ inputValue: e.target.value }));
+    //* 数据变化时，执行handleStoreChange函数
+    store.subscribe(this.handleStoreChange);
   }
-
-  handleDelete(id) {
-    //! state中的数据不能直接修改，必须通过setState
-    this.setState((prevState) => ({
-      list: prevState.list.filter((item) => item.id !== id),
-    }));
-  }
-
-  handleSubmit() {
-    this.setState({
-      list: [
-        {
-          name: this.state.inputValue,
-          id: new Date(),
-        },
-        ...this.state.list,
-      ],
+  handleInputChange(e) {
+    store.dispatch({
+      type: "CHANGE_INPUT_VALUE",
+      payload: { inputValue: e.target.value },
     });
-    this.setState({ inputValue: "" });
   }
 
+  handleAdd() {
+    store.dispatch({
+      type: "ADD_INPUT_VALUE",
+    });
+  }
+  handleDelete(index) {
+    store.dispatch({
+      type: "DELETE_TODO",
+      payload: { index },
+    });
+  }
+
+  handleStoreChange() {
+    //? 当数据发生变化时,setState()
+    this.setState(store.getState());
+  }
   render() {
+    const { inputValue, list } = this.state;
     return (
-      <>
-        <div>
-          <label htmlFor='input'>请输入内容</label>
-          <input
-            id='input'
-            type='text'
-            value={this.state.inputValue}
-            onChange={this.handleChange}
-            ref={(input) => (this.input = input)}
+      <div style={{ padding: 20 }}>
+        <Space>
+          <Input
+            placeholder='请输入'
+            style={{ width: 300 }}
+            value={inputValue}
+            onChange={this.handleInputChange}
           />
-          <button onClick={this.handleSubmit}>提交</button>
-        </div>
-        <ul ref={(ul) => (this.ul = ul)}>{this.getTodoItem()}</ul>
-      </>
+          <Button type='primary' onClick={this.handleAdd}>
+            点击
+          </Button>
+        </Space>
+        <List
+          style={{ width: 300, marginTop: 20 }}
+          bordered
+          size='small'
+          dataSource={list}
+          renderItem={(item, index) => (
+            <List.Item onClick={() => this.handleDelete(index)}>
+              {item}
+            </List.Item>
+          )}
+        />
+      </div>
     );
-  }
-
-  getTodoItem() {
-    return this.state.list.map((item) => (
-      <li
-        key={item.id}
-        onClick={this.handleDelete.bind(this, item.id)}
-        // !dangerouslySetInnerHTML让某些标签的内容不被转译
-        dangerouslySetInnerHTML={{ __html: item.name }}
-      >
-        {/* !: 如果使用了dangerouslySetInnerHTML，那么该标签内部不能再写内容，否则会报错*/}
-        {/* {item.name} */}
-      </li>
-    ));
   }
 }
-
 export default App;
