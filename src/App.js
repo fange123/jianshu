@@ -3,6 +3,8 @@ import React, { Component } from "react";
 import "./App.css";
 import store from "./store";
 
+import { changeValue, addTodo, deleteTodo } from "./store/actionCreator";
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -16,22 +18,14 @@ class App extends Component {
     store.subscribe(this.handleStoreChange);
   }
   handleInputChange(e) {
-    store.dispatch({
-      type: "CHANGE_INPUT_VALUE",
-      payload: { inputValue: e.target.value },
-    });
+    store.dispatch(changeValue(e.target.value));
   }
 
   handleAdd() {
-    store.dispatch({
-      type: "ADD_INPUT_VALUE",
-    });
+    store.dispatch(addTodo());
   }
   handleDelete(index) {
-    store.dispatch({
-      type: "DELETE_TODO",
-      payload: { index },
-    });
+    store.dispatch(deleteTodo(index));
   }
 
   handleStoreChange() {
