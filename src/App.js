@@ -1,9 +1,9 @@
-import { Input, Space, Button, List } from "antd";
 import React, { Component } from "react";
 import "./App.css";
 import store from "./store";
 
 import { changeValue, addTodo, deleteTodo } from "./store/actionCreator";
+import TodoListUI from "./TodoListUI.js";
 
 class App extends Component {
   constructor(props) {
@@ -13,9 +13,6 @@ class App extends Component {
     this.handleStoreChange = this.handleStoreChange.bind(this);
     this.handleAdd = this.handleAdd.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
-
-    //* 数据变化时，执行handleStoreChange函数
-    store.subscribe(this.handleStoreChange);
   }
   handleInputChange(e) {
     store.dispatch(changeValue(e.target.value));
@@ -32,33 +29,22 @@ class App extends Component {
     //? 当数据发生变化时,setState()
     this.setState(store.getState());
   }
+
+  componentDidMount() {
+    //* 数据变化时，执行handleStoreChange函数
+    //TODO:setState要在mounted中后使用，在constructor中使用可以会引发bug
+    store.subscribe(this.handleStoreChange);
+  }
   render() {
     const { inputValue, list } = this.state;
     return (
-      <div style={{ padding: 20 }}>
-        <Space>
-          <Input
-            placeholder='请输入'
-            style={{ width: 300 }}
-            value={inputValue}
-            onChange={this.handleInputChange}
-          />
-          <Button type='primary' onClick={this.handleAdd}>
-            点击
-          </Button>
-        </Space>
-        <List
-          style={{ width: 300, marginTop: 20 }}
-          bordered
-          size='small'
-          dataSource={list}
-          renderItem={(item, index) => (
-            <List.Item onClick={() => this.handleDelete(index)}>
-              {item}
-            </List.Item>
-          )}
-        />
-      </div>
+      <TodoListUI
+        inputValue={inputValue}
+        list={list}
+        handleDelete={this.handleDelete}
+        handleInputChange={this.handleInputChange}
+        handleAdd={this.handleAdd}
+      />
     );
   }
 }
