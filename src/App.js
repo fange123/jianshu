@@ -6,7 +6,7 @@ import {
   changeValue,
   addTodo,
   deleteTodo,
-  getTodoList,
+  initTodoList,
 } from "./store/actionCreator";
 import TodoListUI from "./TodoListUI.js";
 
@@ -43,10 +43,14 @@ class App extends Component {
     //   method: "get",
     //   url: "http://localhost:3000/newTodo",
     //   // !:不能直接setState,请求回来的数据要存在store里面
-    // }).then((res) => this.setState(() => ({ list: res.data })));
+    // }).then((res) => store.dispatch(initTodoList(res.data)));
 
     //TODO:使用了redux-thunk后，dispatch里面的action不仅仅是对象了,还可以是个函数，函数里面可以发送ajax请求
-    store.dispatch(getTodoList());
+    // store.dispatch(getTodoList());
+
+    //TODO:使用redux-saga
+    //做两件事情，1，发请求，2，把请求回来的数据发送给store
+    store.dispatch(initTodoList());
   }
   render() {
     const { inputValue, list } = this.state;
