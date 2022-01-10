@@ -1,35 +1,20 @@
-import {
-  CHANGE_INPUT_VALUE,
-  ADD_INPUT_VALUE,
-  DELETE_TODO,
-  INIT_TODO_LIST,
-} from "./actionTypes";
-
 const defaultState = {
-  inputValue: "",
-  list: [],
+  inputValue: "hh",
+  list: ["hello"],
 };
+
 const reducer = (state = defaultState, action) => {
   switch (action.type) {
-    case CHANGE_INPUT_VALUE:
-      return { ...state, inputValue: action.payload.inputValue };
-    case ADD_INPUT_VALUE:
+    case "change_input_value":
       return {
         ...state,
-        list: [state.inputValue, ...state.list],
-        inputValue: "",
+        inputValue: action.payload.value,
       };
-    case DELETE_TODO:
-      const newList = [...state.list];
-      newList.splice(action.payload.index, 1);
-      return { ...state, list: [...newList] };
-
-    case INIT_TODO_LIST:
-      return { ...state, list: action.payload.list };
 
     default:
-      return state;
+      break;
   }
+  return state;
 };
 
 export default reducer;
