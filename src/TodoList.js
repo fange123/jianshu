@@ -1,32 +1,47 @@
-import React, { Component } from "react";
+import React, { useEffect } from "react";
 import "./App.css";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
+import { getList, addTodo, deleteTodo } from "./store/actions";
 
-class TodoList extends Component {
-  handleChange(e) {}
-  componentDidMount() {}
-  render() {
-    const { inputValue, list, handleChange } = this.props;
-    return (
-      <div style={{ padding: 20 }}>
-        <div>
-          <input value={inputValue} onChange={handleChange}></input>
-          <button>添加</button>
-        </div>
-        <ul>
-          {list.map((item, index) => (
-            <li key={index}>{item}</li>
-          ))}
-        </ul>
+const TodoList = (props) => {
+  const { inputValue, list, handleChange } = props;
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getList());
+  }, []);
+
+  const handleDelete = (id) => {
+    dispatch(deleteTodo(id));
+  };
+
+  const handleAdd = () => {
+    dispatch(addTodo(inputValue));
+  };
+
+  return (
+    <div style={{ padding: 20 }}>
+      <div>
+        <input value={inputValue} onChange={handleChange}></input>
+        <button onClick={handleAdd}>添加</button>
       </div>
-    );
-  }
-}
+      <ul>
+        {list.map((item) => (
+          <li key={item.id} onClick={() => handleDelete(item.id)}>
+            {item.value}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
 
+//TODO:从store取值的
 const mapStateToProps = (state) => {
   return { inputValue: state.inputValue, list: state.list };
 };
 
+//TODO:向store发送dispatch的
 const mapDispatchToProps = (dispatch) => {
   return {
     handleChange(e) {

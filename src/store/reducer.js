@@ -1,6 +1,6 @@
 const defaultState = {
-  inputValue: "hh",
-  list: ["hello"],
+  inputValue: "",
+  list: [],
 };
 
 const reducer = (state = defaultState, action) => {
@@ -9,6 +9,18 @@ const reducer = (state = defaultState, action) => {
       return {
         ...state,
         inputValue: action.payload.value,
+      };
+
+    case "addTodo":
+      return {
+        ...state,
+        inputValue: "",
+      };
+
+    case "init_list":
+      return {
+        ...state,
+        list: action.payload.list,
       };
 
     default:

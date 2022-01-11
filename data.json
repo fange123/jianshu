@@ -5,5 +5,14 @@
       "id": 1
     }
   ],
-  "newTodo":["hh","😄"]
+  "newTodo": [
+    {
+      "value": "haha",
+      "id": 2
+    },
+    {
+      "value": "😄",
+      "id": 4
+    }
+  ]
 }
