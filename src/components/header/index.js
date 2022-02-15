@@ -1,54 +1,55 @@
-import React, { Component } from "react";
+import React from "react";
 import styled from "styled-components";
 import logoPng from "../../static/images/logo.png";
 import "../../static/fonts/iconfont.css";
-export default class Header extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      focused: false,
-    };
-    this.handleBlur = this.handleBlur.bind(this);
-    this.handleFocus = this.handleFocus.bind(this);
-  }
+import { connect } from "react-redux";
+const Header = (props) => {
+  const { focused, handleBlur, handleFocus } = props;
+  return (
+    <HeaderWrapper>
+      <Logo href='/' />
+      <Nav>
+        <NavItem className='active'>首页</NavItem>
+        <NavItem>下载App</NavItem>
+        <NavItem>会员</NavItem>
+        <NavItem>IT技术</NavItem>
+        <SearchWrapper className={focused ? "focused" : ""}>
+          <NavSearch onBlur={handleBlur} onFocus={handleFocus} />
+          <i className={focused ? "focused iconfont" : "iconfont"}>&#xe6e4;</i>
+        </SearchWrapper>
+      </Nav>
+      <RightWrapper>
+        <RightItem>
+          <i className='iconfont'>&#xe636;</i>
+        </RightItem>
+        <RightItem>登录</RightItem>
+        <Button className='sign'>注册</Button>
+        <Button className='write'>写文章</Button>
+      </RightWrapper>
+    </HeaderWrapper>
+  );
+};
 
-  handleBlur() {
-    this.setState({ focused: false });
-  }
+const mapStateToProps = (state) => {
+  return { focused: state.focused };
+};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    handleBlur() {
+      dispatch({
+        type: "search_blur",
+      });
+    },
 
-  handleFocus() {
-    this.setState({ focused: true });
-  }
+    handleFocus() {
+      dispatch({
+        type: "search_focus",
+      });
+    },
+  };
+};
 
-  render() {
-    const { focused } = this.state;
-    return (
-      <HeaderWrapper>
-        <Logo href='/' />
-        <Nav>
-          <NavItem className='active'>首页</NavItem>
-          <NavItem>下载App</NavItem>
-          <NavItem>会员</NavItem>
-          <NavItem>IT技术</NavItem>
-          <SearchWrapper className={focused ? "focused" : ""}>
-            <NavSearch onBlur={this.handleBlur} onFocus={this.handleFocus} />
-            <i className={focused ? "focused iconfont" : "iconfont"}>
-              &#xe6e4;
-            </i>
-          </SearchWrapper>
-        </Nav>
-        <RightWrapper>
-          <RightItem>
-            <i className='iconfont'>&#xe636;</i>
-          </RightItem>
-          <RightItem>登录</RightItem>
-          <Button className='sign'>注册</Button>
-          <Button className='write'>写文章</Button>
-        </RightWrapper>
-      </HeaderWrapper>
-    );
-  }
-}
+export default connect(mapStateToProps, mapDispatchToProps)(Header);
 
 const SearchWrapper = styled.div`
   position: relative;
