@@ -1,9 +1,27 @@
 import React, { Component } from "react";
 import styled from "styled-components";
 import logoPng from "../../static/images/logo.png";
-
+import "../../static/fonts/iconfont.css";
 export default class Header extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      focused: false,
+    };
+    this.handleBlur = this.handleBlur.bind(this);
+    this.handleFocus = this.handleFocus.bind(this);
+  }
+
+  handleBlur() {
+    this.setState({ focused: false });
+  }
+
+  handleFocus() {
+    this.setState({ focused: true });
+  }
+
   render() {
+    const { focused } = this.state;
     return (
       <HeaderWrapper>
         <Logo href='/' />
@@ -12,10 +30,17 @@ export default class Header extends Component {
           <NavItem>下载App</NavItem>
           <NavItem>会员</NavItem>
           <NavItem>IT技术</NavItem>
-          <NavSearch />
+          <SearchWrapper className={focused ? "focused" : ""}>
+            <NavSearch onBlur={this.handleBlur} onFocus={this.handleFocus} />
+            <i className={focused ? "focused iconfont" : "iconfont"}>
+              &#xe6e4;
+            </i>
+          </SearchWrapper>
         </Nav>
         <RightWrapper>
-          <RightItem>Aa</RightItem>
+          <RightItem>
+            <i className='iconfont'>&#xe636;</i>
+          </RightItem>
           <RightItem>登录</RightItem>
           <Button className='sign'>注册</Button>
           <Button className='write'>写文章</Button>
@@ -24,6 +49,32 @@ export default class Header extends Component {
     );
   }
 }
+
+const SearchWrapper = styled.div`
+  position: relative;
+  &.focused {
+    input {
+      width: 260px;
+      transition: width 0.5s;
+    }
+    .iconfont {
+      background-color: #777;
+      opacity: 0.7;
+      transition: background-color 1s;
+    }
+  }
+  .iconfont {
+    position: absolute;
+    right: 4px;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    border-radius: 50%;
+    padding: 2px;
+    bottom: 12px;
+  }
+`;
 
 const HeaderWrapper = styled.div`
   font-size: 18px;
@@ -64,6 +115,7 @@ const NavItem = styled.div`
 const NavSearch = styled.input.attrs({
   placeholder: "搜索",
 })`
+  transition: width 0.5s;
   width: 180px;
   height: 56px;
   padding: 0 40px 0 20px;
@@ -74,6 +126,7 @@ const NavSearch = styled.input.attrs({
   background: #eee;
   outline: none;
   margin-top: 9px;
+  color: #777;
   &::placeholder {
     color: #999;
   }
