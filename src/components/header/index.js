@@ -3,8 +3,37 @@ import styled from "styled-components";
 import logoPng from "../../static/images/logo.png";
 import "../../static/fonts/iconfont.css";
 import { connect } from "react-redux";
+import { textSplit } from "../../utils";
+
 const Header = (props) => {
   const { focused, handleBlur, handleFocus } = props;
+
+  const searchArea = (focused) => {
+    if (focused) {
+      return (
+        <SearchArea>
+          <SearchUl>
+            <LiItem>
+              <SearchItem>
+                {textSplit("啊细节都记得曾经的你曾经的奶茶")}
+              </SearchItem>
+            </LiItem>
+          </SearchUl>
+        </SearchArea>
+      );
+    }
+    return null;
+  };
+
+  const LiItem = ({ children }) => {
+    return (
+      <SearchLi>
+        <i className='iconfont'>&#xe787;</i>
+        {children}
+        <i className='iconfont del'>&#xe61a;</i>
+      </SearchLi>
+    );
+  };
   return (
     <HeaderWrapper>
       <Logo href='/' />
@@ -16,6 +45,7 @@ const Header = (props) => {
         <SearchWrapper className={focused ? "focused" : ""}>
           <NavSearch onBlur={handleBlur} onFocus={handleFocus} />
           <i className={focused ? "focused iconfont" : "iconfont"}>&#xe6e4;</i>
+          {searchArea(focused)}
         </SearchWrapper>
       </Nav>
       <RightWrapper>
@@ -51,6 +81,59 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);
+
+export const SearchUl = styled.ul``;
+export const SearchLi = styled.li`
+  line-height: 20px;
+  display: flex;
+  align-items: center;
+  .iconfont {
+    position: static !important;
+    font-size: 18px;
+    background: none !important;
+  }
+  .del {
+    cursor: pointer;
+    font-size: 10px;
+    visibility: hidden;
+  }
+  &:hover {
+    .del {
+      visibility: visible;
+    }
+  }
+`;
+export const SearchItem = styled.a`
+  width: 80%;
+  display: inline-block;
+  line-height: 20px;
+  padding: 10px 5px;
+  font-size: 14px;
+  color: #333;
+`;
+
+export const SearchArea = styled.div`
+  margin-top: 15px;
+  width: 230px;
+  background-color: #fff;
+  box-shadow: 0 0 8px rgb(0 0 0 / 20%);
+  left: 0;
+  border-radius: 4px;
+  padding: 5px;
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border: 12px solid transparent;
+    border-bottom-color: #fff;
+    left: 20px;
+    bottom: 99%;
+  }
+`;
 
 const SearchWrapper = styled.div`
   position: relative;
