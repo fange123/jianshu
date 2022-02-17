@@ -4,20 +4,21 @@ import logoPng from "../../static/images/logo.png";
 import "../../static/fonts/iconfont.css";
 import { connect } from "react-redux";
 import { textSplit } from "../../utils";
+import axios from "axios";
+import { fromJS } from "immutable";
 
 const Header = (props) => {
-  const { focused, handleBlur, handleFocus } = props;
-
+  const { focused, list, handleBlur, handleFocus } = props;
   const searchArea = (focused) => {
     if (focused) {
       return (
         <SearchArea>
           <SearchUl>
-            <LiItem>
-              <SearchItem>
-                {textSplit("啊细节都记得曾经的你曾经的奶茶")}
-              </SearchItem>
-            </LiItem>
+            {list.map((item) => (
+              <LiItem key={item.id}>
+                <SearchItem>{textSplit(item.value)}</SearchItem>
+              </LiItem>
+            ))}
           </SearchUl>
         </SearchArea>
       );
@@ -62,7 +63,11 @@ const Header = (props) => {
 
 const mapStateToProps = (state) => {
   // return { focused: state.get("header").get("focused") };
-  return { focused: state.getIn(["header", "focused"]) };
+  return {
+    focused: state.getIn(["header", "focused"]),
+    // TODO：immutable的List没办法直接map遍历，可以用toJS()转化成正常格式
+    list: state.getIn(["header", "list"]).toJS(),
+  };
 };
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -75,6 +80,22 @@ const mapDispatchToProps = (dispatch) => {
     handleFocus() {
       dispatch({
         type: "search_focus",
+      });
+      //TODO：获取到焦点的时候还需要发送请求，一般异步的操作一般使用redux-thunk或者redux-saga,使得dispatch能够发送函数
+
+      dispatch((dispatch) => {
+        axios
+          .get("/api/header.json")
+          .then((res) => {
+            //* 请求拿到值需要给store，然后从store里面拿值
+            dispatch({
+              type: "get_list",
+              payload: { list: fromJS(res.data.data) },
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       });
     },
   };

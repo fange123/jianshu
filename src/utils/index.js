@@ -1,3 +1,3 @@
-export const textSplit = (text) => {
+export const textSplit = (text = "") => {
   return `${text.slice(0, 8)}...`;
 };
