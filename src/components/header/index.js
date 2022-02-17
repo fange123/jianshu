@@ -4,7 +4,6 @@ import logoPng from "../../static/images/logo.png";
 import "../../static/fonts/iconfont.css";
 import { connect } from "react-redux";
 const Header = (props) => {
-  console.log(props);
   const { focused, handleBlur, handleFocus } = props;
   return (
     <HeaderWrapper>
@@ -32,7 +31,7 @@ const Header = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  return { focused: state.header.focused };
+  return { focused: state.header.get("focused") };
 };
 const mapDispatchToProps = (dispatch) => {
   return {
