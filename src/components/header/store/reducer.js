@@ -5,6 +5,10 @@ const defaultState = fromJS({
   focused: false,
   // ? list被fromJs包裹，也变成了immutable类型
   list: [],
+  totalPage: 1,
+  page: 1,
+  mouseIn: false,
+  rotateValue: 1,
 });
 
 // * state是不可改变的，但是有时候却会不小心修改它，为了避免state被修改
@@ -20,7 +24,22 @@ const reducer = (state = defaultState, action) => {
       return state.set("focused", false);
     case "get_list":
       // ? 传过来的list也应该是immutable数据，之前已经转换过了
-      return state.set("list", action.payload.list);
+      // return state
+      //   .set("list", action.payload.list)
+      //   .set("totalPage", action.payload.totalPage)
+
+      return state.merge({
+        list: action.payload.list,
+        totalPage: action.payload.totalPage,
+      });
+    case "mouse_enter":
+      return state.set("mouseIn", true);
+    case "mouse_leave":
+      return state.set("mouseIn", false);
+    case "change_page":
+      return state
+        .set("page", action.payload.page)
+        .set("rotateValue", action.payload.rotateValue);
 
     default:
       return state;

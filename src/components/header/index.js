@@ -7,59 +7,95 @@ import { textSplit } from "../../utils";
 import axios from "axios";
 import { fromJS } from "immutable";
 
-const Header = (props) => {
-  const { focused, list, handleBlur, handleFocus } = props;
-  const searchArea = (focused) => {
-    if (focused) {
-      return (
-        <SearchArea>
-          <SearchUl>
-            {list.map((item) => (
-              <LiItem key={item.id}>
-                <SearchItem>{textSplit(item.value)}</SearchItem>
-              </LiItem>
-            ))}
-          </SearchUl>
-        </SearchArea>
-      );
-    }
-    return null;
-  };
+class Header extends React.Component {
+  render() {
+    const {
+      focused,
+      list,
+      page,
+      rotateValue,
+      totalPage,
+      mouseIn,
+      handleBlur,
+      handleFocus,
+      handleEnter,
+      handleLeave,
+      changePage,
+    } = this.props;
+    // TODO： 处理分页，每页5个
+    const nowList = list.slice((page - 1) * 5, page * 5);
 
-  const LiItem = ({ children }) => {
+    const searchArea = () => {
+      if (focused || mouseIn) {
+        return (
+          <SearchArea onMouseEnter={handleEnter} onMouseLeave={handleLeave}>
+            <SearchTitle>
+              <span>热门搜索</span>
+              <span>
+                换一换 &nbsp;
+                <i
+                  ref={(icon) => {
+                    this.spinIcon = icon;
+                  }}
+                  className='iconfont spin'
+                  onClick={() =>
+                    changePage(page, totalPage, this.spinIcon, rotateValue)
+                  }
+                >
+                  &#xe851;
+                </i>
+              </span>
+            </SearchTitle>
+            <SearchUl>
+              {nowList.map((item) => (
+                <LiItem key={item.id}>
+                  <SearchItem>{textSplit(item.value)}</SearchItem>
+                </LiItem>
+              ))}
+            </SearchUl>
+          </SearchArea>
+        );
+      }
+      return null;
+    };
+
+    const LiItem = ({ children }) => {
+      return (
+        <SearchLi>
+          <i className='iconfont'>&#xe787;</i>
+          {children}
+          <i className='iconfont del'>&#xe61a;</i>
+        </SearchLi>
+      );
+    };
     return (
-      <SearchLi>
-        <i className='iconfont'>&#xe787;</i>
-        {children}
-        <i className='iconfont del'>&#xe61a;</i>
-      </SearchLi>
+      <HeaderWrapper>
+        <Logo href='/' />
+        <Nav>
+          <NavItem className='active'>首页</NavItem>
+          <NavItem>下载App</NavItem>
+          <NavItem>会员</NavItem>
+          <NavItem>IT技术</NavItem>
+          <SearchWrapper className={focused ? "focused" : ""}>
+            <NavSearch onBlur={handleBlur} onFocus={handleFocus} />
+            <i className={focused ? "focused iconfont zoom" : "iconfont zoom"}>
+              &#xe6e4;
+            </i>
+            {searchArea()}
+          </SearchWrapper>
+        </Nav>
+        <RightWrapper>
+          <RightItem>
+            <i className='iconfont'>&#xe636;</i>
+          </RightItem>
+          <RightItem>登录</RightItem>
+          <Button className='sign'>注册</Button>
+          <Button className='write'>写文章</Button>
+        </RightWrapper>
+      </HeaderWrapper>
     );
-  };
-  return (
-    <HeaderWrapper>
-      <Logo href='/' />
-      <Nav>
-        <NavItem className='active'>首页</NavItem>
-        <NavItem>下载App</NavItem>
-        <NavItem>会员</NavItem>
-        <NavItem>IT技术</NavItem>
-        <SearchWrapper className={focused ? "focused" : ""}>
-          <NavSearch onBlur={handleBlur} onFocus={handleFocus} />
-          <i className={focused ? "focused iconfont" : "iconfont"}>&#xe6e4;</i>
-          {searchArea(focused)}
-        </SearchWrapper>
-      </Nav>
-      <RightWrapper>
-        <RightItem>
-          <i className='iconfont'>&#xe636;</i>
-        </RightItem>
-        <RightItem>登录</RightItem>
-        <Button className='sign'>注册</Button>
-        <Button className='write'>写文章</Button>
-      </RightWrapper>
-    </HeaderWrapper>
-  );
-};
+  }
+}
 
 const mapStateToProps = (state) => {
   // return { focused: state.get("header").get("focused") };
@@ -67,10 +103,38 @@ const mapStateToProps = (state) => {
     focused: state.getIn(["header", "focused"]),
     // TODO：immutable的List没办法直接map遍历，可以用toJS()转化成正常格式
     list: state.getIn(["header", "list"]).toJS(),
+    page: state.getIn(["header", "page"]),
+    mouseIn: state.getIn(["header", "mouseIn"]),
+    totalPage: state.getIn(["header", "totalPage"]),
+    rotateValue: state.getIn(["header", "rotateValue"]),
   };
 };
 const mapDispatchToProps = (dispatch) => {
   return {
+    changePage(page, totalPage, spinIcon, rotateValue) {
+      // * 拿到spin的dom元素，设置旋转属性值
+      // * rotateValue每点击一次就加1
+
+      spinIcon.style.transform = "rotate(0deg)";
+      //* 利用正则表达式，替换旋转角度
+      const rotate = spinIcon.style.transform.replace(
+        /[0-9]/gi,
+        Number(rotateValue * 360)
+      );
+      spinIcon.style.transform = rotate;
+
+      if (page < totalPage) {
+        dispatch({
+          type: "change_page",
+          payload: { page: page + 1, rotateValue: rotateValue + 1 },
+        });
+      } else {
+        dispatch({
+          type: "change_page",
+          payload: { page: 1, rotateValue: rotateValue + 1 },
+        });
+      }
+    },
     handleBlur() {
       dispatch({
         type: "search_blur",
@@ -90,7 +154,11 @@ const mapDispatchToProps = (dispatch) => {
             //* 请求拿到值需要给store，然后从store里面拿值
             dispatch({
               type: "get_list",
-              payload: { list: fromJS(res.data.data) },
+              payload: {
+                list: fromJS(res.data.data),
+                totalPage: Math.ceil(res.data.data.length / 5),
+                page: 1,
+              },
             });
           })
           .catch((err) => {
@@ -98,10 +166,45 @@ const mapDispatchToProps = (dispatch) => {
           });
       });
     },
+
+    handleEnter() {
+      dispatch({
+        type: "mouse_enter",
+      });
+    },
+
+    handleLeave() {
+      dispatch({
+        type: "mouse_leave",
+      });
+    },
   };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);
+
+export const SearchTitle = styled.div`
+  padding: 5px;
+  box-sizing: border-box;
+  width: 100%;
+  height: 30px;
+  line-height: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #777;
+  border-bottom: 1px solid #f6f6f6;
+  span {
+    font-size: 16px;
+  }
+
+  .spin {
+    cursor: pointer;
+    transition: all 0.5s ease-in-out;
+    transform-origin: center center;
+    display: inline-block;
+  }
+`;
 
 export const SearchUl = styled.ul``;
 export const SearchLi = styled.li`
@@ -109,9 +212,7 @@ export const SearchLi = styled.li`
   display: flex;
   align-items: center;
   .iconfont {
-    position: static !important;
     font-size: 18px;
-    background: none !important;
   }
   .del {
     cursor: pointer;
@@ -163,13 +264,13 @@ const SearchWrapper = styled.div`
       width: 260px;
       transition: width 0.5s;
     }
-    .iconfont {
+    .zoom {
       background-color: #777;
       opacity: 0.7;
       transition: background-color 1s;
     }
   }
-  .iconfont {
+  .zoom {
     position: absolute;
     right: 4px;
     width: 30px;
@@ -179,6 +280,7 @@ const SearchWrapper = styled.div`
     border-radius: 50%;
     padding: 2px;
     bottom: 12px;
+    cursor: pointer;
   }
 `;
 
