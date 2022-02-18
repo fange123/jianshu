@@ -23,7 +23,7 @@ class Header extends React.Component {
       changePage,
     } = this.props;
     // TODO： 处理分页，每页5个
-    const nowList = list.slice((page - 1) * 5, page * 5);
+    const nowList = list.toJS().slice((page - 1) * 5, page * 5);
 
     const searchArea = () => {
       if (focused || mouseIn) {
@@ -77,7 +77,7 @@ class Header extends React.Component {
           <NavItem>会员</NavItem>
           <NavItem>IT技术</NavItem>
           <SearchWrapper className={focused ? "focused" : ""}>
-            <NavSearch onBlur={handleBlur} onFocus={handleFocus} />
+            <NavSearch onBlur={handleBlur} onFocus={() => handleFocus(list)} />
             <i className={focused ? "focused iconfont zoom" : "iconfont zoom"}>
               &#xe6e4;
             </i>
@@ -102,7 +102,7 @@ const mapStateToProps = (state) => {
   return {
     focused: state.getIn(["header", "focused"]),
     // TODO：immutable的List没办法直接map遍历，可以用toJS()转化成正常格式
-    list: state.getIn(["header", "list"]).toJS(),
+    list: state.getIn(["header", "list"]),
     page: state.getIn(["header", "page"]),
     mouseIn: state.getIn(["header", "mouseIn"]),
     totalPage: state.getIn(["header", "totalPage"]),
@@ -141,30 +141,32 @@ const mapDispatchToProps = (dispatch) => {
       });
     },
 
-    handleFocus() {
+    handleFocus(list) {
       dispatch({
         type: "search_focus",
       });
       //TODO：获取到焦点的时候还需要发送请求，一般异步的操作一般使用redux-thunk或者redux-saga,使得dispatch能够发送函数
-
-      dispatch((dispatch) => {
-        axios
-          .get("/api/header.json")
-          .then((res) => {
-            //* 请求拿到值需要给store，然后从store里面拿值
-            dispatch({
-              type: "get_list",
-              payload: {
-                list: fromJS(res.data.data),
-                totalPage: Math.ceil(res.data.data.length / 5),
-                page: 1,
-              },
+      // * 请求优化，只有初次获取焦点时发送请求
+      if (list.size === 0) {
+        dispatch((dispatch) => {
+          axios
+            .get("/api/header.json")
+            .then((res) => {
+              //* 请求拿到值需要给store，然后从store里面拿值
+              dispatch({
+                type: "get_list",
+                payload: {
+                  list: fromJS(res.data.data),
+                  totalPage: Math.ceil(res.data.data.length / 5),
+                  page: 1,
+                },
+              });
+            })
+            .catch((err) => {
+              console.log(err);
             });
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      });
+        });
+      }
     },
 
     handleEnter() {
