@@ -49,7 +49,7 @@ const HomeWrapper = styled.div`
 const HomeLeft = styled.div`
   width: 640px;
   padding: 30px 0 0;
-  margin-left: 40px;
+  margin-left: 20px;
 
   .banner-img {
     width: 625px;
