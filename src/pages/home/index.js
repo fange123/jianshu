@@ -6,7 +6,7 @@ import Topic from "./components/Topic";
 import { connect } from "react-redux";
 
 const Home = (props) => {
-  const { list } = props;
+  const { topicList, articleList } = props;
   return (
     <HomeWrapper>
       <HomeLeft>
@@ -15,8 +15,8 @@ const Home = (props) => {
           alt=''
           src='https://upload.jianshu.io/admin_banners/web_images/5055/348f9e194f4062a17f587e2963b7feb0b0a5a982.png?imageMogr2/auto-orient/strip|imageView2/1/w/1250/h/540'
         />
-        <Topic topicList={list.topicList} />
-        <List />
+        <Topic topicList={topicList} />
+        <List articleList={articleList} />
       </HomeLeft>
 
       <HomeRight>
@@ -29,7 +29,8 @@ const Home = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    list: state.get("home", "topicList").toJS(),
+    topicList: state.getIn(["home", "topicList"]).toJS(),
+    articleList: state.getIn(["home", "articleList"]).toJS(),
   };
 };
 const mapDispatchToProps = (dispatch) => {
