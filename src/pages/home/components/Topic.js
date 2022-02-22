@@ -10,6 +10,7 @@ const Topic = (props) => {
           {item.title}
         </TopicItem>
       ))}
+      <MoreTopic>更多热点</MoreTopic>
     </TopicWrapper>
   );
 };
@@ -17,7 +18,7 @@ const Topic = (props) => {
 export default Topic;
 
 const TopicWrapper = styled.div`
-  padding: 20px 0 10px 0;
+  padding: 20px 0 0 0;
   overflow: hidden;
 `;
 const TopicItem = styled.a`
@@ -31,7 +32,8 @@ const TopicItem = styled.a`
   border-radius: 4px;
   box-sizing: border-box;
   float: left;
-  margin: 5px 10px;
+  margin-right: 15px;
+  margin-bottom: 10px;
   padding-right: 10px;
 
   .topic-img {
@@ -39,5 +41,25 @@ const TopicItem = styled.a`
     width: 32px;
     height: 32px;
     vertical-align: middle;
+  }
+`;
+
+const MoreTopic = styled.a.attrs({ href: "#" })`
+  display: inline-block;
+  padding: 0 10px;
+  position: relative;
+  font-size: 14px;
+  height: 36;
+  line-height: 36px;
+  text-decoration: none;
+
+  cursor: pointer;
+  &::after {
+    content: ">";
+    display: inline-block;
+    position: absolute;
+    font-size: 16px;
+    right: -5px;
+    top: 0;
   }
 `;
