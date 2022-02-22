@@ -1,12 +1,18 @@
+import { useEffect } from "react";
 import styled from "styled-components";
 import List from "./components/List";
 import Recommend from "./components/Recommend";
 import Writer from "./components/Writer";
 import Topic from "./components/Topic";
 import { connect } from "react-redux";
+import axios from "axios";
 
 const Home = (props) => {
-  const { topicList, articleList } = props;
+  const { topicList, articleList, writerList, getList } = props;
+
+  useEffect(() => {
+    getList();
+  }, []);
   return (
     <HomeWrapper>
       <HomeLeft>
@@ -21,7 +27,7 @@ const Home = (props) => {
 
       <HomeRight>
         <Recommend />
-        <Writer />
+        <Writer writerList={writerList} />
       </HomeRight>
     </HomeWrapper>
   );
@@ -31,10 +37,25 @@ const mapStateToProps = (state) => {
   return {
     topicList: state.getIn(["home", "topicList"]).toJS(),
     articleList: state.getIn(["home", "articleList"]).toJS(),
+    writerList: state.getIn(["home", "writerList"]).toJS(),
   };
 };
 const mapDispatchToProps = (dispatch) => {
-  return {};
+  return {
+    getList() {
+      axios.get("/api/home.json").then((response) => {
+        const data = response.data.data;
+        dispatch({
+          type: "fetch_list",
+          payload: {
+            topicList: data.topicList,
+            articleList: data.articleList,
+            writerList: data.writeList,
+          },
+        });
+      });
+    },
+  };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

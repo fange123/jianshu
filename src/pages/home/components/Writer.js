@@ -15,6 +15,7 @@ class Writer extends React.Component {
     spinIcon.style.transform = rotate;
   }
   render() {
+    const { writerList } = this.props;
     return (
       <WriteWrapper>
         <SearchTitle className='title'>
@@ -32,16 +33,19 @@ class Writer extends React.Component {
             </i>
           </span>
         </SearchTitle>
-        <WriteItem>
-          <span className='pic'>
-            <img alt='' src={img01} />
-          </span>
-          <Content>
-            <h3>卢璐说</h3>
-            <p>写了2159.2k字 · 34.8k喜欢</p>
-          </Content>
-          <Follow>关注+</Follow>
-        </WriteItem>
+        {writerList.map((item) => (
+          <WriteItem key={item.id}>
+            <span className='pic'>
+              <img alt='' src={item.url} />
+            </span>
+            <Content>
+              <h3>{item.title}</h3>
+              <p>{item.content}</p>
+            </Content>
+            <Follow>关注+</Follow>
+          </WriteItem>
+        ))}
+
         <LookMore>查看更多</LookMore>
       </WriteWrapper>
     );
@@ -90,14 +94,14 @@ const Content = styled.div`
   }
   p {
     font-size: 12px;
-    line-height: 14px;
+    line-height: 18px;
     color: #969696;
   }
 `;
 
 const Follow = styled.a`
   display: inline-block;
-  padding: 0;
+  padding-top: 5px;
   font-size: 13px;
   color: #42c02e;
 `;

@@ -86,7 +86,7 @@ class Header extends React.Component {
         </Nav>
         <RightWrapper>
           <RightItem>
-            <i className='iconfont'>&#xe636;</i>
+            <i className='iconfont text'>&#xe636;</i>
           </RightItem>
           <RightItem>登录</RightItem>
           <Button className='sign'>注册</Button>
@@ -356,6 +356,9 @@ const RightItem = styled.a`
   font-size: 18px;
   color: #666;
   margin-right: 15px;
+  .text {
+    font-size: 20px !important;
+  }
 `;
 
 const Button = styled.button`
