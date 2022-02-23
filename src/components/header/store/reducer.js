@@ -21,7 +21,11 @@ const reducer = (state = defaultState, action) => {
       //~ 返回值时需要用set,set并不是修改state,而是结合新旧结果生成一个全新的immutable对象
       return state.set("focused", true);
     case "search_blur":
-      return state.set("focused", false);
+      return state.merge({
+        focused: false,
+        // 失去焦点恢复成1
+        rotateValue: 1,
+      });
     case "get_header_list":
       // ? 传过来的list也应该是immutable数据，之前已经转换过了
       // return state
