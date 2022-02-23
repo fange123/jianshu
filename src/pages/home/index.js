@@ -12,15 +12,29 @@ const Home = (props) => {
     topicList,
     articleList,
     writerList,
+    showTop,
     articlePage,
     getList,
     handleMore,
+    bindScroll,
   } = props;
 
   useEffect(() => {
     getList();
+    // 挂载滚动监听
+    window.addEventListener("scroll", bindScroll);
+
+    return () => {
+      // 挂载滚动监听
+      window.removeEventListener("scroll", bindScroll);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleTop = () => {
+    //TODO:回到顶部
+    window.scrollTo(0, 0);
+  };
 
   return (
     <HomeWrapper>
@@ -41,6 +55,8 @@ const Home = (props) => {
         <Recommend />
         <Writer writerList={writerList} />
       </HomeRight>
+      {/* 监听滚动距离，大于400显示BackTop */}
+      {showTop ? <BackTop onClick={handleTop}>TOP</BackTop> : null}
     </HomeWrapper>
   );
 };
@@ -52,6 +68,7 @@ const mapStateToProps = (state) => {
     articleList: state.getIn(["home", "articleList"]).toJS(),
     writerList: state.getIn(["home", "writerList"]).toJS(),
     articlePage: state.getIn(["home", "articlePage"]),
+    showTop: state.getIn(["home", "showTop"]),
   };
 };
 const mapDispatchToProps = (dispatch) => {
@@ -83,6 +100,18 @@ const mapDispatchToProps = (dispatch) => {
         });
       });
     },
+
+    bindScroll() {
+      // 获取从顶部滚动的距离
+      const length = document.documentElement.scrollTop;
+      const showTop = length > 400;
+      dispatch({
+        type: "scroll_top",
+        payload: {
+          showTop,
+        },
+      });
+    },
   };
 };
 
@@ -110,4 +139,16 @@ const HomeLeft = styled.div`
 const HomeRight = styled.div`
   width: 280px;
   padding: 30px 0 0 15px;
+`;
+
+const BackTop = styled.div`
+  cursor: pointer;
+  width: 50px;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  border: 1px solid #5c5c5c;
 `;

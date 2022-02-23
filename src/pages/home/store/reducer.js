@@ -5,6 +5,7 @@ const defaultState = fromJS({
   articleList: [],
   writerList: [],
   articlePage: 1,
+  showTop: false,
 });
 
 const reducer = (state = defaultState, action) => {
@@ -23,6 +24,10 @@ const reducer = (state = defaultState, action) => {
           ...action.payload.moreList,
         ]),
         articlePage: action.payload.articlePage,
+      });
+    case "scroll_top":
+      return state.merge({
+        showTop: action.payload.showTop,
       });
 
     default:
