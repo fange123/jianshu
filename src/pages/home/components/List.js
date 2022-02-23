@@ -7,8 +7,8 @@ const List = (props) => {
   return (
     <ListWrapper>
       {articleList.map((item, index) => (
-        <Link to='/detail' style={{ textDecoration: "none" }}>
-          <ListItem key={index}>
+        <Link to='/detail' style={{ textDecoration: "none" }} key={index}>
+          <ListItem>
             <ListContent>
               <h3 className='title'>{item.title}</h3>
               <p className='desc'>{item.content}</p>

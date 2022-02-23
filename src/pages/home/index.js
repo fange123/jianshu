@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import List from "./components/List";
 import Recommend from "./components/Recommend";
@@ -18,6 +18,27 @@ const Home = (props) => {
     handleMore,
     bindScroll,
   } = props;
+
+  const [count, setCount] = useState(1); //换一换旋转
+  const [page, setPage] = useState(1);
+
+  useEffect(() => {
+    if (page > Math.ceil(writerList.length / 5)) {
+      setPage(1);
+    }
+  }, [page, writerList.length]);
+
+  // TODO: 点击换一换，按钮旋转，页面切换
+  const changePage = (spinIcon) => {
+    setCount(count + 1);
+    setPage(page + 1);
+    spinIcon.style.transform = "rotate(0deg)";
+    const rotate = spinIcon.style.transform.replace(
+      /[0-9]/gi,
+      Number(count * 360)
+    );
+    spinIcon.style.transform = rotate;
+  };
 
   useEffect(() => {
     getList();
@@ -53,7 +74,7 @@ const Home = (props) => {
 
       <HomeRight>
         <Recommend />
-        <Writer writerList={writerList} />
+        <Writer writerList={writerList} changePage={changePage} page={page} />
       </HomeRight>
       {/* 监听滚动距离，大于400显示BackTop */}
       {showTop ? <BackTop onClick={handleTop}>TOP</BackTop> : null}

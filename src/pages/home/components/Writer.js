@@ -3,18 +3,11 @@ import styled from "styled-components";
 import { SearchTitle } from "../.././../components/header/index";
 
 class Writer extends React.PureComponent {
-  state = { count: 1 };
-  changePage(spinIcon) {
-    this.setState({ count: this.state.count + 1 });
-    spinIcon.style.transform = "rotate(0deg)";
-    const rotate = spinIcon.style.transform.replace(
-      /[0-9]/gi,
-      Number(this.state.count * 360)
-    );
-    spinIcon.style.transform = rotate;
-  }
   render() {
-    const { writerList } = this.props;
+    const { writerList, changePage, page } = this.props;
+
+    const newList = writerList.slice((page - 1) * 5, page * 5);
+
     return (
       <WriteWrapper>
         <SearchTitle className='title'>
@@ -26,13 +19,13 @@ class Writer extends React.PureComponent {
                 this.spinIcon = icon;
               }}
               className='iconfont spin'
-              onClick={() => this.changePage(this.spinIcon)}
+              onClick={() => changePage(this.spinIcon)}
             >
               &#xe851;
             </i>
           </span>
         </SearchTitle>
-        {writerList.map((item) => (
+        {newList.map((item) => (
           <WriteItem key={item.id}>
             <span className='pic'>
               <img alt='' src={item.url} />
@@ -45,7 +38,7 @@ class Writer extends React.PureComponent {
           </WriteItem>
         ))}
 
-        <LookMore>查看更多</LookMore>
+        <LookMore>查看全部 &nbsp;{">"}</LookMore>
       </WriteWrapper>
     );
   }
