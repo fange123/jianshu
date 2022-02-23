@@ -4,6 +4,7 @@ const defaultState = fromJS({
   topicList: [],
   articleList: [],
   writerList: [],
+  articlePage: 1,
 });
 
 const reducer = (state = defaultState, action) => {
@@ -21,6 +22,7 @@ const reducer = (state = defaultState, action) => {
           ...state.get("articleList"),
           ...action.payload.moreList,
         ]),
+        articlePage: action.payload.articlePage,
       });
 
     default:
