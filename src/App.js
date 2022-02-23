@@ -7,16 +7,14 @@ import Home from "./pages/home";
 class App extends Component {
   render() {
     return (
-      <>
+      <Router>
         <Header />
-        <Router>
-          {/* TODO: Router下必须只有一个根元素，所以需要Routes包裹起来 */}
-          <Routes>
-            <Route path='/detail' element={<Detail />}></Route>
-            <Route path='/' element={<Home />}></Route>
-          </Routes>
-        </Router>
-      </>
+        {/* TODO: Router下必须只有一个根元素，所以需要Routes包裹起来 */}
+        <Routes>
+          <Route path='/detail' element={<Detail />}></Route>
+          <Route path='/' element={<Home />}></Route>
+        </Routes>
+      </Router>
     );
   }
 }

@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import { textSplit } from "../../utils";
 import axios from "axios";
 import { fromJS } from "immutable";
+import { Link } from "react-router-dom";
 
 class Header extends React.Component {
   render() {
@@ -70,7 +71,10 @@ class Header extends React.Component {
     };
     return (
       <HeaderWrapper>
-        <Logo href='/' />
+        <Link to='/'>
+          <Logo />
+        </Link>
+
         <Nav>
           <NavItem className='active'>首页</NavItem>
           <NavItem>下载App</NavItem>
@@ -293,9 +297,8 @@ const HeaderWrapper = styled.div`
   border-bottom: 1px solid #f0f0f0;
 `;
 
-const Logo = styled.a`
+const Logo = styled.div`
   background-image: url(${logoPng});
-  display: block;
   height: 56px;
   width: 100px;
   background-size: contain;

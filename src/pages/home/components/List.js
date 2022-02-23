@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 const List = (props) => {
   const { articleList, handleMore } = props;
@@ -6,32 +7,34 @@ const List = (props) => {
   return (
     <ListWrapper>
       {articleList.map((item, index) => (
-        <ListItem key={index}>
-          <ListContent>
-            <h3 className='title'>{item.title}</h3>
-            <p className='desc'>{item.content}</p>
-            <Meta>
-              <span className='action item'>
-                <i className='iconfont'>&#xe76f;</i>
-                {item.collection}
-              </span>
-              <span className='item'>{item.name}</span>
-              <span className='item'>
-                <i className='iconfont'>&#xe891;</i>
-                {item.commend}
-              </span>
-              <span className='item'>
-                <i className='iconfont'>&#xe623;</i>
-                {item.love}
-              </span>
-              <span className='item'>
-                <i className='iconfont'>&#xe611;</i>
-                {item.money}
-              </span>
-            </Meta>
-          </ListContent>
-          {item.pic ? <img alt='' src={item.pic} className='pic-img' /> : ""}
-        </ListItem>
+        <Link to='/detail' style={{ textDecoration: "none" }}>
+          <ListItem key={index}>
+            <ListContent>
+              <h3 className='title'>{item.title}</h3>
+              <p className='desc'>{item.content}</p>
+              <Meta>
+                <span className='action item'>
+                  <i className='iconfont'>&#xe76f;</i>
+                  {item.collection}
+                </span>
+                <span className='item'>{item.name}</span>
+                <span className='item'>
+                  <i className='iconfont'>&#xe891;</i>
+                  {item.commend}
+                </span>
+                <span className='item'>
+                  <i className='iconfont'>&#xe623;</i>
+                  {item.love}
+                </span>
+                <span className='item'>
+                  <i className='iconfont'>&#xe611;</i>
+                  {item.money}
+                </span>
+              </Meta>
+            </ListContent>
+            {item.pic ? <img alt='' src={item.pic} className='pic-img' /> : ""}
+          </ListItem>
+        </Link>
       ))}
 
       <LoadMore onClick={handleMore}>查看更多</LoadMore>
@@ -73,6 +76,7 @@ const ListContent = styled.div`
   .title {
     font-size: 18px;
     line-height: 1.5;
+    color: #333;
   }
 `;
 
