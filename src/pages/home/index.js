@@ -12,7 +12,9 @@ const Home = (props) => {
 
   useEffect(() => {
     getList();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   return (
     <HomeWrapper>
       <HomeLeft>
@@ -34,6 +36,7 @@ const Home = (props) => {
 };
 
 const mapStateToProps = (state) => {
+  // TODO: 从store取数据
   return {
     topicList: state.getIn(["home", "topicList"]).toJS(),
     articleList: state.getIn(["home", "articleList"]).toJS(),
@@ -45,8 +48,9 @@ const mapDispatchToProps = (dispatch) => {
     getList() {
       axios.get("/api/home.json").then((response) => {
         const data = response.data.data;
+        // TODO: 给store存数据
         dispatch({
-          type: "fetch_list",
+          type: "get_list",
           payload: {
             topicList: data.topicList,
             articleList: data.articleList,
