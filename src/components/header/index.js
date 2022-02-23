@@ -23,7 +23,7 @@ class Header extends React.Component {
       changePage,
     } = this.props;
     // TODO： 处理分页，每页5个
-    const nowList = list.toJS().slice((page - 1) * 5, page * 5);
+    const nowList = list?.toJS().slice((page - 1) * 5, page * 5);
 
     const searchArea = () => {
       if (focused || mouseIn) {

@@ -8,7 +8,7 @@ import { connect } from "react-redux";
 import axios from "axios";
 
 const Home = (props) => {
-  const { topicList, articleList, writerList, getList } = props;
+  const { topicList, articleList, writerList, getList, handleMore } = props;
 
   useEffect(() => {
     getList();
@@ -24,7 +24,7 @@ const Home = (props) => {
           src='https://upload.jianshu.io/admin_banners/web_images/5055/348f9e194f4062a17f587e2963b7feb0b0a5a982.png?imageMogr2/auto-orient/strip|imageView2/1/w/1250/h/540'
         />
         <Topic topicList={topicList} />
-        <List articleList={articleList} />
+        <List articleList={articleList} handleMore={handleMore} />
       </HomeLeft>
 
       <HomeRight>
@@ -55,6 +55,18 @@ const mapDispatchToProps = (dispatch) => {
             topicList: data.topicList,
             articleList: data.articleList,
             writerList: data.writeList,
+          },
+        });
+      });
+    },
+
+    handleMore() {
+      axios.get("/api/homeList.json").then((response) => {
+        const data = response.data.data;
+        dispatch({
+          type: "more_list",
+          payload: {
+            moreList: data.list,
           },
         });
       });

@@ -15,6 +15,13 @@ const reducer = (state = defaultState, action) => {
         articleList: fromJS(action.payload.articleList),
         writerList: fromJS(action.payload.writerList),
       });
+    case "more_list":
+      return state.merge({
+        articleList: fromJS([
+          ...state.get("articleList"),
+          ...action.payload.moreList,
+        ]),
+      });
 
     default:
       return state;

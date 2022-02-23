@@ -1,11 +1,12 @@
 import styled from "styled-components";
 
 const List = (props) => {
-  const { articleList } = props;
+  const { articleList, handleMore } = props;
+
   return (
     <ListWrapper>
-      {articleList.map((item) => (
-        <ListItem key={item.id}>
+      {articleList.map((item, index) => (
+        <ListItem key={index}>
           <ListContent>
             <h3 className='title'>{item.title}</h3>
             <p className='desc'>{item.content}</p>
@@ -32,6 +33,8 @@ const List = (props) => {
           {item.pic ? <img alt='' src={item.pic} className='pic-img' /> : ""}
         </ListItem>
       ))}
+
+      <LoadMore onClick={handleMore}>查看更多</LoadMore>
     </ListWrapper>
   );
 };
@@ -40,6 +43,7 @@ export default List;
 
 const ListWrapper = styled.div`
   margin-top: 20px;
+  padding-bottom: 20px;
 `;
 
 const ListItem = styled.div`
@@ -90,4 +94,16 @@ const Meta = styled.div`
   .action {
     color: #ea6f5a;
   }
+`;
+
+const LoadMore = styled.div`
+  width: 100%;
+  border-radius: 20px;
+  background-color: #a5a5a5;
+  margin: 30px auto 60px;
+  padding: 10px 15px;
+  text-align: center;
+  font-size: 15px;
+  color: #fff;
+  cursor: pointer;
 `;
