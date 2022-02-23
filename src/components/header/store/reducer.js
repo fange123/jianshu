@@ -22,7 +22,7 @@ const reducer = (state = defaultState, action) => {
       return state.set("focused", true);
     case "search_blur":
       return state.set("focused", false);
-    case "get_list":
+    case "get_header_list":
       // ? 传过来的list也应该是immutable数据，之前已经转换过了
       // return state
       //   .set("list", action.payload.list)

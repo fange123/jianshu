@@ -48,7 +48,7 @@ class Header extends React.PureComponent {
               </span>
             </SearchTitle>
             <SearchUl>
-              {nowList.map((item) => (
+              {nowList?.map((item) => (
                 <LiItem key={item.id}>
                   <SearchItem>{textSplit(item.value)}</SearchItem>
                 </LiItem>
@@ -151,6 +151,7 @@ const mapDispatchToProps = (dispatch) => {
       });
       //TODO：获取到焦点的时候还需要发送请求，一般异步的操作一般使用redux-thunk或者redux-saga,使得dispatch能够发送函数
       // * 请求优化，只有初次获取焦点时发送请求
+
       if (list.size === 0) {
         dispatch((dispatch) => {
           axios
@@ -158,9 +159,9 @@ const mapDispatchToProps = (dispatch) => {
             .then((res) => {
               //* 请求拿到值需要给store，然后从store里面拿值
               dispatch({
-                type: "get_list",
+                type: "get_header_list",
                 payload: {
-                  list: fromJS(res.data.data),
+                  list: fromJS(res.data.data) || fromJS([]),
                   totalPage: Math.ceil(res.data.data.length / 5),
                   page: 1,
                 },
