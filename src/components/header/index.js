@@ -8,7 +8,7 @@ import axios from "axios";
 import { fromJS } from "immutable";
 import { Link } from "react-router-dom";
 
-class Header extends React.Component {
+class Header extends React.PureComponent {
   render() {
     const {
       focused,

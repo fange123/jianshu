@@ -1,9 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import { SearchTitle } from "../.././../components/header/index";
-import img01 from "../../../static/images/img1.png";
 
-class Writer extends React.Component {
+class Writer extends React.PureComponent {
   state = { count: 1 };
   changePage(spinIcon) {
     this.setState({ count: this.state.count + 1 });
