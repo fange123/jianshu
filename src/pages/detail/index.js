@@ -1,11 +1,16 @@
+import { useEffect } from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
+import axios from "axios";
 
 const Detail = (props) => {
-  const { detail, content, writeList } = props;
+  const { detail, content, writeList, getDetail } = props;
   const { time, words, read, money, collect, title, subTitle, imgUrl } = detail;
 
-  console.log(detail);
+  useEffect(() => {
+    getDetail();
+  }, []);
+
   return (
     <DetailWrapper>
       <ContentWrapper>
@@ -68,7 +73,17 @@ const mapStateToProps = (state) => {
   };
 };
 const mapDispatchToProps = (dispatch) => {
-  return {};
+  return {
+    getDetail() {
+      axios.get("/api/detail.json").then((response) => {
+        const data = response.data.data;
+        dispatch({
+          type: "change_detail",
+          payload: data,
+        });
+      });
+    },
+  };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Detail);
 
@@ -151,6 +166,7 @@ const TitleContent = styled.div`
     border: 1px solid #ec7259;
     outline: none;
     border-radius: 50px;
+    cursor: pointer;
   }
   .detail {
     color: #969696;
