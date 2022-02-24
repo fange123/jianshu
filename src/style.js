@@ -28,6 +28,7 @@ export const GlobalStyle = createGlobalStyle`
     }
     body {
       line-height: 1;
+
     }
     ol, ul {
       list-style: none;
@@ -44,4 +45,10 @@ export const GlobalStyle = createGlobalStyle`
       border-collapse: collapse;
       border-spacing: 0;
 }
+
+html,body ,#root{
+  height: 100%;
+}
+
+
 `;
