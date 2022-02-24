@@ -11,7 +11,7 @@ class App extends Component {
         <Header />
         {/* TODO: Router下必须只有一个根元素，所以需要Routes包裹起来 */}
         <Routes>
-          <Route path='/detail' element={<Detail />}></Route>
+          <Route path='/detail/:id' element={<Detail />}></Route>
           <Route path='/' element={<Home />}></Route>
         </Routes>
       </Router>

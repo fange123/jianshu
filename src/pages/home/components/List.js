@@ -7,7 +7,14 @@ const List = (props) => {
   return (
     <ListWrapper>
       {articleList.map((item, index) => (
-        <Link to='/detail' style={{ textDecoration: "none" }} key={index}>
+        <Link
+          // TODO:动态路由方法
+          to={`/detail/${item.id}`}
+          // TODO: 路由传参方法
+          // to={`/detail/?id={item.id}`}
+          style={{ textDecoration: "none" }}
+          key={index}
+        >
           <ListItem>
             <ListContent>
               <h3 className='title'>{item.title}</h3>
