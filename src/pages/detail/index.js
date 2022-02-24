@@ -1,88 +1,57 @@
 import styled from "styled-components";
+import { connect } from "react-redux";
 
-const Detail = () => {
+const Detail = (props) => {
+  const { detail, content, writeList } = props;
+  const { time, words, read, money, collect, title, subTitle, imgUrl } = detail;
+
+  console.log(detail);
   return (
     <DetailWrapper>
       <ContentWrapper>
         <LeftWrapper>
-          <h1>快要结婚了，可是我却哭了</h1>
+          <h1>{title}</h1>
           <TitleContent>
-            <img
-              alt=''
-              src='https://upload.jianshu.io/users/upload_avatars/15682939/03f3e062-ba29-4c49-89a3-bb8e97e7bb32.jpg?imageMogr2/auto-orient/strip|imageView2/1/w/96/h/96/format/webp'
-            />
+            <img alt='' src={imgUrl} />
             <div>
               <div>
-                <span className='title'>一个有才情的女子</span>
+                <span className='title'>{subTitle}</span>
                 <button className='follow'>关注+</button>
               </div>
               <div className='detail'>
                 <span className='collect'>
-                  <i className='iconfont'>&#xe76f;</i>48
+                  <i className='iconfont'>&#xe76f;</i>
+                  {collect}
                 </span>
-                <span className='desc'>2022.02.08 19:58:07</span>
-                <span className='desc'>字数 752</span>
-                <span className='desc'>阅读 13,858</span>
+                <span className='desc'>{time}</span>
+                <span className='desc'>字数 {words}</span>
+                <span className='desc'>阅读 {read}</span>
               </div>
             </div>
           </TitleContent>
-          <ContentDetail>
-            <p>
-              我和男友结婚日子定了，因为我在湖北，他在深圳，所以我这边5月1号嫁，他那边5月20号娶。
-            </p>
-            <p>
-              我是湖北农村的，他老家是广西的，临近结婚，却发生了很多争吵，争吵的原因就是礼节问题和各自成长环境的不同。
-            </p>
-
-            <p>
-              我在湖北长大，这边就是很重视长辈的想法，什么都是舅舅为大，彩礼也受的重，要了男友20万，这些男友家里都接受。
-            </p>
-
-            <p>
-              男友在广西长大，因为家庭因素，亲戚往来淡泊，基本不往来，只是一家亲，其他亲戚老死不相往来。
-            </p>
-            <p>
-              我们是在一个习俗上发生的争吵，我妈妈说他要娶我，还要另外给2万我妈妈，让她分给亲戚，俗称下乡钱，我男友和他家里都不同意，说干嘛分给亲戚，我也是才知道这个钱，我就跟妈妈说要不就不要这个钱，我妈说那怎么行，每个嫁女儿的都要出这个钱。
-            </p>
-
-            <p>
-              双方僵持不下，我确实之前没有听说我这个钱，我男友不想出的原因是凭什么给亲戚，因为他说给我爸妈都行，为什么要给亲戚，我也不清楚，我妈又没有提前跟我说，搞得我好烦。
-            </p>
-            <p>
-              再者，我男友这边不满意的是，我妈一会这样，一会那样的，不一次性说清楚要多少，搞得我男友这边不好规划。
-            </p>
-          </ContentDetail>
+          <ContentDetail dangerouslySetInnerHTML={{ __html: content }} />
         </LeftWrapper>
         <RightWrapper>
           <WriterContent>
             <TitleContent>
-              <img
-                alt=''
-                src='https://upload.jianshu.io/users/upload_avatars/15682939/03f3e062-ba29-4c49-89a3-bb8e97e7bb32.jpg?imageMogr2/auto-orient/strip|imageView2/1/w/96/h/96/format/webp'
-              />
+              <img alt='' src={imgUrl} />
               <div>
                 <div>
                   <span className='title'>一个有才情的...</span>
                   <button className='follow'>关注+</button>
                 </div>
                 <div className='detail'>
-                  <span className='desc'>总资产 3752</span>
+                  <span className='desc'>总资产 {money}</span>
                 </div>
               </div>
             </TitleContent>
             <WriterList>
-              <ListItem>
-                <h3>我要结婚了</h3>
-                <p> 阅读 608</p>
-              </ListItem>
-              <ListItem>
-                <h3>我要结婚了</h3>
-                <p> 阅读 608</p>
-              </ListItem>
-              <ListItem>
-                <h3>我要结婚了</h3>
-                <p> 阅读 608</p>
-              </ListItem>
+              {writeList.map((item) => (
+                <ListItem key={item.id}>
+                  <h3>{item.title}</h3>
+                  <p> {item.desc}</p>
+                </ListItem>
+              ))}
             </WriterList>
           </WriterContent>
         </RightWrapper>
@@ -91,7 +60,17 @@ const Detail = () => {
   );
 };
 
-export default Detail;
+const mapStateToProps = (state) => {
+  return {
+    writeList: state.getIn(["detail", "writeList"]).toJS(),
+    detail: state.getIn(["detail", "detail"]).toJS(),
+    content: state.getIn(["detail", "content"]),
+  };
+};
+const mapDispatchToProps = (dispatch) => {
+  return {};
+};
+export default connect(mapStateToProps, mapDispatchToProps)(Detail);
 
 const WriterContent = styled.div`
   background-color: #fff;
