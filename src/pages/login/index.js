@@ -49,16 +49,18 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleLogin() {
-      axios.get("/api/login.json").then((res) => {
-        const data = res.data.data;
-        dispatch({
-          type: "login",
-          payload: {
-            value: data,
-          },
+    handleLogin(name, password) {
+      axios
+        .get(`/api/login.json?name=${name}&password=${password}`)
+        .then((res) => {
+          const data = res.data.data;
+          dispatch({
+            type: "login",
+            payload: {
+              value: data,
+            },
+          });
         });
-      });
     },
   };
 };
