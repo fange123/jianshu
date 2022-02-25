@@ -298,7 +298,7 @@ const HeaderWrapper = styled.div`
   border-bottom: 1px solid #f0f0f0;
 `;
 
-const Logo = styled.div`
+export const Logo = styled.div`
   background-image: url(${logoPng});
   height: 56px;
   width: 100px;
