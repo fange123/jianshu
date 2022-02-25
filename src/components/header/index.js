@@ -13,6 +13,7 @@ class Header extends React.PureComponent {
     const {
       focused,
       list,
+      login,
       page,
       rotateValue,
       totalPage,
@@ -22,6 +23,7 @@ class Header extends React.PureComponent {
       handleEnter,
       handleLeave,
       changePage,
+      handleLogout,
     } = this.props;
     // TODO： 处理分页，每页5个
     const nowList = list?.toJS().slice((page - 1) * 5, page * 5);
@@ -92,9 +94,17 @@ class Header extends React.PureComponent {
           <RightItem>
             <i className='iconfont text'>&#xe636;</i>
           </RightItem>
-          <RightItem>登录</RightItem>
+          {login ? (
+            <RightItem onClick={handleLogout}>退出</RightItem>
+          ) : (
+            <Link to='/login'>
+              <RightItem>登录</RightItem>
+            </Link>
+          )}
           <Button className='sign'>注册</Button>
-          <Button className='write'>写文章</Button>
+          <Link to='/write'>
+            <Button className='write'>写文章</Button>
+          </Link>
         </RightWrapper>
       </HeaderWrapper>
     );
@@ -111,6 +121,7 @@ const mapStateToProps = (state) => {
     mouseIn: state.getIn(["header", "mouseIn"]),
     totalPage: state.getIn(["header", "totalPage"]),
     rotateValue: state.getIn(["header", "rotateValue"]),
+    login: state.getIn(["login", "login"]),
   };
 };
 const mapDispatchToProps = (dispatch) => {
@@ -183,6 +194,12 @@ const mapDispatchToProps = (dispatch) => {
     handleLeave() {
       dispatch({
         type: "mouse_leave",
+      });
+    },
+
+    handleLogout() {
+      dispatch({
+        type: "logout",
       });
     },
   };
@@ -354,7 +371,8 @@ const RightWrapper = styled.div`
   align-items: center;
 `;
 
-const RightItem = styled.a`
+const RightItem = styled.span`
+  cursor: pointer;
   display: inline-block;
   padding: 17px 10px;
   font-size: 18px;

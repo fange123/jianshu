@@ -1,26 +1,68 @@
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { Logo } from "../../components/header/index";
+import { connect } from "react-redux";
+import { useState } from "react";
+import axios from "axios";
 
 const Login = (props) => {
-  const {} = props;
+  const { login, handleLogin } = props;
 
-  return (
+  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
+
+  const changeName = (e) => {
+    setName(e.target.value);
+  };
+  const changePassword = (e) => {
+    setPassword(e.target.value);
+  };
+
+  return !login ? (
     <LoginWrapper>
       <Link to='/'>
         <Logo />
       </Link>
       <LoginCard>
         <h3 className='title'>登录</h3>
-        <Input placeholder='请输入用户名' />
-        <Input placeholder='请输入密码' type='password' />
-        <LoginBitton>登录</LoginBitton>
+        <Input placeholder='请输入用户名' value={name} onChange={changeName} />
+        <Input
+          placeholder='请输入密码'
+          type='password'
+          value={password}
+          onChange={changePassword}
+        />
+        <LoginBitton onClick={() => handleLogin(name, password)}>
+          登录
+        </LoginBitton>
       </LoginCard>
     </LoginWrapper>
+  ) : (
+    <Navigate to='/' />
   );
 };
 
-export default Login;
+const mapStateToProps = (state) => {
+  return {
+    login: state.getIn(["login", "login"]),
+  };
+};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    handleLogin() {
+      axios.get("/api/login.json").then((res) => {
+        const data = res.data.data;
+        dispatch({
+          type: "login",
+          payload: {
+            value: data,
+          },
+        });
+      });
+    },
+  };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
 
 const LoginWrapper = styled.div`
   background-color: #f1f1f1;

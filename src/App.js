@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Detail from "./pages/detail";
 import Home from "./pages/home";
 import Login from "./pages/login";
+import Write from "./pages/write";
 
 class App extends Component {
   render() {
@@ -15,6 +16,7 @@ class App extends Component {
           <Route path='/detail/:id' element={<Detail />}></Route>
           <Route path='/' element={<Home />}></Route>
           <Route path='/login' element={<Login />}></Route>
+          <Route path='/write' element={<Write />}></Route>
         </Routes>
       </Router>
     );
